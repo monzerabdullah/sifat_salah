@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        fontFamily: 'NotoKufiArabic',
       ),
       home: const HomePage(),
     );
@@ -59,7 +60,13 @@ class _HomePageState extends State<HomePage> {
                   itemCount: book['pages'].length,
                   itemBuilder: (context, index) {
                     final text = book['pages'][index]['text'];
-                    return ListView(children: [Text(text)]);
+                    return ListView(
+                      children: [
+                        Text(
+                          text,
+                        ),
+                      ],
+                    );
                   },
                 )
               : Center(
