@@ -66,8 +66,6 @@ flutter:
     - family: NotoKufiArabic
       fonts:
         - asset: fonts/NotoKufiArabic-Regular.ttf
-        - asset: fonts/Schyler-Italic.ttf
-          style: italic
 
   #
   # For details regarding fonts from package dependencies,
