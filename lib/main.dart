@@ -41,86 +41,126 @@ class _HomePageState extends State<HomePage> {
     final data = json.decode(jsonData);
     setState(() {
       book = data;
+      pagesCount = paragraphCount(book);
     });
   }
 
   var book;
+  var pagesCount;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     loadBook();
+    // paragraphCount(book);
   }
+
+  int paragraphCount(dynamic book) {
+    if (book == null) return 0;
+    int count = 0;
+    for (var chapter in book['chapters']) {
+      count += (chapter['content'] as List).length;
+    }
+    return count;
+  }
+
+  // int paragraphCount(dynamic book) {
+  //   int count = 0;
+  //   for (var chapter in book['chapters'] as List) {
+  //     for (var content in chapter['content'] as List) {
+  //       count += content.length as int;
+  //     }
+  //   }
+  //   // setState(() {
+  //   //   pagesCount = count;
+  //   // });
+  //   return count;
+  // }
 
   @override
   Widget build(BuildContext context) {
+    pagesCount = paragraphCount(book);
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.menu,
-            color: secondary,
-          ),
-        ),
-        title: Text('صفة الصلاة'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.bookmark,
-                color: primary,
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.edit_note_outlined,
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.font_download,
-            ),
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     onPressed: () {},
+      //     icon: Icon(
+      //       Icons.menu,
+      //       color: secondary,
+      //     ),
+      //   ),
+      //   title: Text('صفة الصلاة'),
+      //   actions: [
+      //     IconButton(
+      //       onPressed: () {},
+      //       icon: IconButton(
+      //         onPressed: () {},
+      //         icon: Icon(
+      //           Icons.bookmark,
+      //           color: primary,
+      //         ),
+      //       ),
+      //     ),
+      //     IconButton(
+      //       onPressed: () {},
+      //       icon: IconButton(
+      //         onPressed: () {},
+      //         icon: Icon(
+      //           Icons.edit_note_outlined,
+      //         ),
+      //       ),
+      //     ),
+      //     IconButton(
+      //       onPressed: () {},
+      //       icon: Icon(
+      //         Icons.font_download,
+      //       ),
+      //     ),
+      //   ],
+      // ),
       body: SafeArea(
-          child: book != null
-              ? PageView.builder(
-                  itemCount: book['pages'].length,
-                  itemBuilder: (context, index) {
-                    final text = book['pages'][index]['text'];
-                    return ListView(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                            horizontal: 15,
-                          ),
-                          child: Text(
-                            text,
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              fontSize: 18,
-                              height: 2,
-                            ),
+        child: book != null
+            ? PageView.builder(
+                itemCount: pagesCount,
+                itemBuilder: (context, index) {
+                  final text =
+                      book['chapters'][index]['content'][index]['text'];
+                  final chapterTitle = book['chapters'][index]['title'];
+
+                  return ListView(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16.0, right: 16.0, top: 20),
+                        child: Text(
+                          chapterTitle,
+                          style: TextStyle(
+                            fontSize: 24.0,
                           ),
                         ),
-                      ],
-                    );
-                  },
-                )
-              : Center(
-                  child: CircularProgressIndicator(),
-                )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 16.0,
+                        ),
+                        child: Text(
+                          text,
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                            fontSize: 18,
+                            height: 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              )
+            : Center(
+                child: CircularProgressIndicator(),
+              ),
+      ),
     );
   }
 }
