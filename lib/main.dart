@@ -58,8 +58,12 @@ class _HomePageState extends State<HomePage> {
   int paragraphCount(dynamic book) {
     if (book == null) return 0;
     int count = 0;
+    // for (var chapter in book['chapters']) {
+    //   count += (chapter['content'] as List).length;
+    // }
     for (var chapter in book['chapters']) {
-      count += (chapter['content'] as List).length;
+      var pagesInChapter = (chapter['content'] as List).length;
+      count += pagesInChapter;
     }
     return count;
   }
@@ -120,18 +124,25 @@ class _HomePageState extends State<HomePage> {
       // ),
       body: SafeArea(
         child: book != null
-            ? PageView.builder(
-                itemCount: pagesCount,
-                itemBuilder: (context, index) {
-                  final text =
-                      book['chapters'][index]['content'][index]['text'];
-                  final chapterTitle = book['chapters'][index]['title'];
+            ? ListView.builder(
+                // scrollDirection: Axis.horizontal,
 
-                  return ListView(
+                itemCount: 9,
+                itemBuilder: (context, index) {
+                  final chapter = book['chapters'][index];
+                  final chapterTitle = chapter['title'];
+
+                  final chapterContents = chapter['content'];
+                  // create a page for each text content
+
+                  return Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 20),
+                          left: 16.0,
+                          right: 16.0,
+                          top: 20,
+                        ),
                         child: Text(
                           chapterTitle,
                           style: TextStyle(
@@ -139,24 +150,82 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 16.0,
-                        ),
-                        child: Text(
-                          text,
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontSize: 18,
-                            height: 2,
-                          ),
+                      Column(
+                        children: List.generate(
+                          chapterContents.length,
+                          (index) {
+                            final text = chapterContents[index]['text'];
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 0,
+                                horizontal: 16.0,
+                              ),
+                              child: Text(
+                                // 'chapter paragraphs',
+                                text,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  height: 2,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
                   );
                 },
               )
+            // ? PageView.builder(
+            //     itemCount: 20,
+            //     itemBuilder: (context, index) {
+            //       final chapter = book['chapters'][index];
+            //       // final text = chapter['content'][index]['text'];
+            //       final chapterTitle = chapter['title'];
+            //       final chapterContents = chapter['content'];
+            //       List.generate(chapterContents.length, (index) {});
+            //       return PageView.builder(
+            //         itemCount: 10,
+            //         itemBuilder: (context, index) {
+            //           final text = chapterContents[index]['text'];
+            //           return ListView(
+            //             children: [
+            //               Padding(
+            //                 padding: const EdgeInsets.only(
+            //                   left: 16.0,
+            //                   right: 16.0,
+            //                   top: 20,
+            //                 ),
+            //                 child: Text(
+            //                   chapterTitle,
+            //                   style: TextStyle(
+            //                     fontSize: 24.0,
+            //                   ),
+            //                 ),
+            //               ),
+            //               Padding(
+            //                 padding: const EdgeInsets.symmetric(
+            //                   vertical: 0,
+            //                   horizontal: 16.0,
+            //                 ),
+            //                 child: Text(
+            //                   // 'chapter paragraphs',
+            //                   text,
+            //                   textAlign: TextAlign.justify,
+            //                   style: TextStyle(
+            //                     fontSize: 18,
+            //                     height: 2,
+            //                   ),
+            //                 ),
+            //               ),
+            //             ],
+            //           );
+            //         },
+            //       );
+            //     },
+            //   )
             : Center(
                 child: CircularProgressIndicator(),
               ),
